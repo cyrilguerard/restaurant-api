@@ -3,7 +3,7 @@ use std::time::Duration;
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone, Debug, Default)]
+#[derive(Serialize, Deserialize)]
 pub struct MenuItem {
     pub id: u16,
     pub name: Option<String>,
@@ -13,12 +13,7 @@ pub struct MenuItem {
     pub max_cook_time: Option<Duration>,
 }
 
-pub struct Table {
-    pub id: u16,
-    pub orders: Vec<Order>,
-}
-
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Deserialize)]
 pub struct Order {
     pub id: Option<u32>,
     pub item: MenuItem,
@@ -26,13 +21,10 @@ pub struct Order {
 }
 
 impl Order {
-    pub fn new(item_id: u16) -> Order {
+    pub fn new(item: MenuItem) -> Order {
         Order {
             id: None,
-            item: MenuItem {
-                id: item_id,
-                ..Default::default()
-            },
+            item: item,
             ready_at: None,
         }
     }
