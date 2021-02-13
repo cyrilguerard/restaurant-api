@@ -1,9 +1,14 @@
 use crate::data::connection::SqliteConnection;
+use rocket_contrib::databases::rusqlite::types::ToSql;
 use rocket_contrib::databases::rusqlite::Result;
 use rocket_contrib::databases::rusqlite::Row;
-use rocket_contrib::databases::rusqlite::types::ToSql;
 
-fn query<T, F>(conn: &SqliteConnection, sql: &str, params: &[&dyn ToSql], map_row: F) -> Result<Vec<T>>
+fn query<T, F>(
+    conn: &SqliteConnection,
+    sql: &str,
+    params: &[&dyn ToSql],
+    map_row: F,
+) -> Result<Vec<T>>
 where
     F: FnMut(&Row) -> T,
 {
@@ -15,7 +20,7 @@ where
 pub mod menu_items {
 
     use rocket_contrib::databases::rusqlite::Result;
-    
+
     use std::time::Duration;
 
     use crate::data::connection::SqliteConnection;
@@ -66,21 +71,22 @@ pub mod orders {
         )
     }
 
-    pub fn find_order_by_id(conn: &SqliteConnection, table_id: u16, order_id: u32) -> Result<Order> {
-
+    pub fn find_order_by_id(
+        conn: &SqliteConnection,
+        table_id: u16,
+        order_id: u32,
+    ) -> Result<Order> {
         let mut stmt = conn.prepare("SELECT order_id, mi.item_id, mi.name, ready_at FROM orders o JOIN menu_items mi ON o.item_id = mi.item_id WHERE table_id = ? AND order_id = ?")?;
         stmt.query_row(&[&table_id, &order_id], |row| Order {
-                id: row.get(0),
-                item: MenuItem {
-                    id: row.get::<_, u16>(1),
-                    name: row.get(2),
-                    min_cook_time: None,
-                    max_cook_time: None,
-                },
-                ready_at: None
-            }
-        )
-
+            id: row.get(0),
+            item: MenuItem {
+                id: row.get::<_, u16>(1),
+                name: row.get(2),
+                min_cook_time: None,
+                max_cook_time: None,
+            },
+            ready_at: None,
+        })
     }
 
     pub fn save_order(conn: &SqliteConnection, table_id: u16, mut order: Order) -> Result<Order> {
@@ -90,10 +96,13 @@ pub mod orders {
         Ok(order)
     }
 
-    pub fn delete_order_by_id(conn: &SqliteConnection, table_id: u16, order_id: u16) -> Result<usize> {
+    pub fn delete_order_by_id(
+        conn: &SqliteConnection,
+        table_id: u16,
+        order_id: u16,
+    ) -> Result<usize> {
         let mut stmt = conn.prepare("DELETE FROM orders WHERE order_id = ? and table_id = ?")?;
         let cnt = stmt.execute(&[&table_id, &order_id])?;
         Ok(cnt)
     }
-
 }

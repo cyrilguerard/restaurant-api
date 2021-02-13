@@ -1,9 +1,9 @@
 use std::time::Duration;
 
 use chrono::NaiveDateTime;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Clone, Debug, Default)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default)]
 pub struct MenuItem {
     pub id: u16,
     pub name: Option<String>,

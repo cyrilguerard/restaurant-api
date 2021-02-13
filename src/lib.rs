@@ -6,13 +6,16 @@ use std::fs;
 pub mod data;
 pub mod routes;
 
-fn populate_database(rocket: &rocket::Rocket) {
+pub fn initialize_database(rocket: &rocket::Rocket, sql_script: &str) {
     let conn = data::connection::SqliteConnection::get_one(&rocket).unwrap();
-    let script = fs::read_to_string("schema.sql").unwrap();
+    let script = fs::read_to_string(sql_script).unwrap();
     conn.execute_batch(&script).unwrap();
 }
 
-pub fn ignite_rocket() -> rocket::Rocket {
+pub fn ignite_rocket<F>(post_ignite: F) -> rocket::Rocket
+where
+    F: Fn(&rocket::Rocket) -> (),
+{
     let rocket = rocket::ignite()
         .attach(data::connection::SqliteConnection::fairing())
         .mount(
@@ -25,6 +28,6 @@ pub fn ignite_rocket() -> rocket::Rocket {
                 routes::tables::delete_order_rt,
             ],
         );
-    populate_database(&rocket);
+    post_ignite(&rocket);
     rocket
 }
