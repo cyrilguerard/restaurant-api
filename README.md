@@ -25,7 +25,8 @@ docker run -it --rm -p 8000:8000 --name restaurant-api restaurant-api
 # test
 ```sh
 ./test.sh
+```
 
-# Documentation
+# documentation
 
 

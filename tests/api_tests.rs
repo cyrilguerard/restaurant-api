@@ -78,7 +78,7 @@ fn assert_item(item: &MenuItem, id: u16, name: &str) {
 #[test]
 fn get_menu_items_test() {
     get_then_assert(
-        &"/api/menu-items",
+        &"/api/v1/menu-items",
         Status::Ok,
         ContentType::JSON,
         |items: Vec<MenuItem>| {
@@ -92,7 +92,7 @@ fn get_menu_items_test() {
 #[test]
 fn get_orders_test() {
     get_then_assert(
-        &"/api/tables/1/orders",
+        &"/api/v1/tables/1/orders",
         Status::Ok,
         ContentType::JSON,
         |orders: Vec<Order>| {
@@ -110,7 +110,7 @@ fn get_orders_test() {
 #[test]
 fn get_orders_non_existing_table_test() {
     get_then_assert(
-        &"/api/tables/1000/orders",
+        &"/api/v1/tables/1000/orders",
         Status::NotFound,
         ContentType::JSON,
         |error: ApiError| {
@@ -123,7 +123,7 @@ fn get_orders_non_existing_table_test() {
 #[test]
 fn get_one_order_test() {
     get_then_assert(
-        &"/api/tables/1/orders/1",
+        &"/api/v1/tables/1/orders/1",
         Status::Ok,
         ContentType::JSON,
         |order: Order| {
@@ -137,7 +137,7 @@ fn get_one_order_test() {
 #[test]
 fn get_one_order_non_existing_table_test() {
     get_then_assert(
-        &"/api/tables/1000/orders/1",
+        &"/api/v1/tables/1000/orders/1",
         Status::NotFound,
         ContentType::JSON,
         |error: ApiError| {
@@ -150,7 +150,7 @@ fn get_one_order_non_existing_table_test() {
 #[test]
 fn get_one_order_non_existing_order_test() {
     get_then_assert(
-        &"/api/tables/1/orders/1000",
+        &"/api/v1/tables/1/orders/1000",
         Status::NotFound,
         ContentType::JSON,
         |error: ApiError| {
@@ -163,12 +163,12 @@ fn get_one_order_non_existing_order_test() {
 #[test]
 fn create_order_test() {
     post_then_assert(
-        &"/api/tables/3/orders?item_id=1",
+        &"/api/v1/tables/3/orders?item_id=1",
         Status::Created,
         ContentType::JSON,
         |new_order: Order| {
             assert_ne!(new_order.id, None);
-            let mut url = String::from("/api/tables/3/orders/");
+            let mut url = String::from("/api/v1/tables/3/orders/");
             url.push_str(&new_order.id.unwrap().to_string());
             get_then_assert(&url, Status::Ok, ContentType::JSON, |order: Order| {
                 assert_eq!(order.id, new_order.id);
@@ -182,7 +182,7 @@ fn create_order_test() {
 #[test]
 fn create_order_non_existing_table_test() {
     post_then_assert(
-        &"/api/tables/1000/orders?item_id=1",
+        &"/api/v1/tables/1000/orders?item_id=1",
         Status::NotFound,
         ContentType::JSON,
         |error: ApiError| {
@@ -195,7 +195,7 @@ fn create_order_non_existing_table_test() {
 #[test]
 fn create_order_non_existing_menu_item_test() {
     post_then_assert(
-        &"/api/tables/1/orders?item_id=1000",
+        &"/api/v1/tables/1/orders?item_id=1000",
         Status::NotFound,
         ContentType::JSON,
         |error: ApiError| {
@@ -208,19 +208,19 @@ fn create_order_non_existing_menu_item_test() {
 #[test]
 fn delete_order_test() {
     get_then_assert(
-        &"/api/tables/1/orders/1",
+        &"/api/v1/tables/1/orders/1",
         Status::Ok,
         ContentType::JSON,
         |order: Order| {
             assert_eq!(order.id, Some(1));
             delete_then_assert(
-                &"/api/tables/1/orders/1",
+                &"/api/v1/tables/1/orders/1",
                 Status::NoContent,
                 ContentType::JSON,
                 |body: String| {
                     assert_eq!(&body, "");
                     get_then_assert(
-                        &"/api/tables/1/orders/1",
+                        &"/api/v1/tables/1/orders/1",
                         Status::NotFound,
                         ContentType::JSON,
                         |error: ApiError| {
@@ -237,7 +237,7 @@ fn delete_order_test() {
 #[test]
 fn delete_order_non_existing_table_test() {
     delete_then_assert(
-        &"/api/tables/1000/orders/1",
+        &"/api/v1/tables/1000/orders/1",
         Status::NotFound,
         ContentType::JSON,
         |error: ApiError| {
@@ -250,7 +250,7 @@ fn delete_order_non_existing_table_test() {
 #[test]
 fn delete_order_non_existing_order_test() {
     delete_then_assert(
-        &"/api/tables/1/orders/1000",
+        &"/api/v1/tables/1/orders/1000",
         Status::NotFound,
         ContentType::JSON,
         |error: ApiError| {

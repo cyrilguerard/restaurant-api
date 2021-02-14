@@ -19,7 +19,7 @@ where
     let rocket = rocket::ignite()
         .attach(data::connection::SqliteConnection::fairing())
         .mount(
-            "/api",
+            "/api/v1",
             routes![
                 routes::menu_items::get_menu_items_rt,
                 routes::tables::get_orders_rt,

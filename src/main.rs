@@ -10,6 +10,8 @@ use std::time::Duration;
 use rand::Rng;
 use threadpool::ThreadPool;
 
+const API_URL: &str = "http://localhost:8000/api/v1";
+
 fn random_table_id() -> u16 {
     return rand::thread_rng().gen_range(1..=100) as u16;
 }
@@ -19,14 +21,14 @@ fn random_item_id() -> u16 {
 }
 
 fn call_get_menu_items() -> Vec<MenuItem> {
-    reqwest::get("http://localhost:8000/api/menu-items")
+    reqwest::get(&format!("{}/menu-items", API_URL))
         .map(|mut r| r.json::<Vec<MenuItem>>())
         .unwrap()
         .unwrap()
 }
 
 fn call_get_table_orders(table_id: u16) -> Vec<Order> {
-    let mut url = String::from("http://localhost:8000/api/tables/");
+    let mut url = format!("{}/tables/", API_URL);
     url.push_str(&table_id.to_string());
     url.push_str(&"/orders");
     reqwest::get(&url)
@@ -36,7 +38,7 @@ fn call_get_table_orders(table_id: u16) -> Vec<Order> {
 }
 
 fn call_create_order(table_id: u16, item_id: u16) -> Order {
-    let mut url = String::from("http://localhost:8000/api/tables/");
+    let mut url = format!("{}/tables/", API_URL);
     url.push_str(&table_id.to_string());
     url.push_str(&"/orders?item_id=");
     url.push_str(&item_id.to_string());
@@ -53,7 +55,7 @@ fn call_create_order(table_id: u16, item_id: u16) -> Order {
 fn call_delete_order(table_id: u16) -> () {
     let orders = call_get_table_orders(table_id);
     if orders.len() > 0 {
-        let mut url = String::from("http://localhost:8000/api/tables/");
+        let mut url = format!("{}/tables/", API_URL);
         url.push_str(&random_table_id().to_string());
         url.push_str(&"/orders/");
         url.push_str(&orders[0].id.unwrap().to_string());
