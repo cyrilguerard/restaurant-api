@@ -15,6 +15,7 @@ use restaurant_api::routes::response::ApiError;
 
 lazy_static! {
     static ref CLIENT: Client = Client::new(ignite_rocket(|rocket| {
+        initialize_database(rocket, &"sql/drop.sql");
         initialize_database(rocket, &"sql/schema.sql");
         initialize_database(rocket, &"sql/test-data.sql");
     }))
