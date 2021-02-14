@@ -69,8 +69,11 @@ fn get_orders_test() {
         assert_eq!(orders.len(), 3);
         assert_eq!(orders[0].id, Some(1));
         assert_item(&orders[0].item, 1, "Sushi");
+        assert_ne!(orders[0].ready_at, None);
         assert_eq!(orders[1].id, Some(2));
         assert_item(&orders[1].item, 2, "Cheese Burger");
+        assert_ne!(orders[1].ready_at, None);
+
     })
 }
 
@@ -87,6 +90,7 @@ fn get_one_order_test() {
     get_then_assert(&"/api/tables/1/orders/1", Status::Ok, ContentType::JSON, |order: Order| {
         assert_eq!(order.id, Some(1));
         assert_item(&order.item, 1, "Sushi");
+        assert_ne!(order.ready_at, None);
     })
 }
 
@@ -115,6 +119,7 @@ fn create_order_test() {
         get_then_assert(&url, Status::Ok, ContentType::JSON, |order: Order| {
             assert_eq!(order.id, new_order.id);
             assert_item(&order.item, 1, "Sushi");
+            assert_ne!(order.ready_at, None);
         });
     });
 }

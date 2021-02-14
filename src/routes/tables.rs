@@ -45,7 +45,7 @@ pub fn create_order_rt(conn: SqliteConnection, table_id: u16, item_id: u16) -> A
 }
 
 #[delete("/tables/<table_id>/orders/<order_id>")]
-pub fn delete_order_rt(conn: SqliteConnection, table_id: u16, order_id: u16) -> ApiResponse<String, ApiError> {
+pub fn delete_order_rt(conn: SqliteConnection, table_id: u16, order_id: u32) -> ApiResponse<String, ApiError> {
     if tables::exists(&conn, table_id).unwrap() {
         if orders::delete_by_id(&conn, table_id, order_id).unwrap() {
             ApiResponse::no_content(String::new())

@@ -15,10 +15,10 @@ pub mod menu_items {
             name: row.get(1),
             min_cook_time: row
                 .get::<_, Option<u32>>(2)
-                .map(|secs| Duration::from_secs(secs as u64)),
+                .map(|min| Duration::from_secs((min * 60) as u64)),
             max_cook_time: row
                 .get::<_, Option<u32>>(3)
-                .map(|secs| Duration::from_secs(secs as u64)),
+                .map(|min| Duration::from_secs((min * 60) as u64)),
         }
     }
     
@@ -74,7 +74,7 @@ pub mod orders {
                 min_cook_time: None,
                 max_cook_time: None,
             },
-            ready_at: None,
+            ready_at: row.get(3)
         }
     }
 
@@ -94,8 +94,8 @@ pub mod orders {
     }
 
     pub fn save(conn: &SqliteConnection, table_id: u16, mut order: Order) -> Result<Order> {
-        let mut stmt = conn.prepare("INSERT INTO orders (table_id, item_id) VALUES (?, ?)")?;
-        let id = stmt.insert(&[&table_id, &order.item.id])?;
+        let mut stmt = conn.prepare("INSERT INTO orders (table_id, item_id, ready_at) VALUES (?, ?, ?)")?;
+        let id = stmt.insert(&[&table_id, &order.item.id, &order.ready_at])?;
         order.id = Some(id as u32);
         Ok(order)
     }

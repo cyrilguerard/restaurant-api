@@ -13,6 +13,8 @@ serde_json = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 lazy_static = "1.4.0"
 riker = "0.4"
+rand = "0.8.3"
+rusqlite = { version = "0.14.0", features = ["chrono"] }
 
 [dependencies.rocket_contrib]
 version = "0.4.7"
