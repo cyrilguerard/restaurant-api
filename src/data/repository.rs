@@ -84,7 +84,7 @@ pub mod orders {
         Ok(res.map(|r| r.unwrap()).collect())
     }
 
-    pub fn find_by_id(conn: &SqliteConnection, table_id: u16, order_id: u32,) -> Result<Option<Order>> {
+    pub fn find_by_id(conn: &SqliteConnection, table_id: u16, order_id: u32) -> Result<Option<Order>> {
         let mut stmt = conn.prepare("SELECT order_id, mi.item_id, mi.name, ready_at FROM orders o JOIN menu_items mi ON o.item_id = mi.item_id WHERE table_id = ? AND order_id = ?")?;
         match stmt.query_row(&[&table_id, &order_id], map_order) {
             Ok(order) => Ok(Some(order)),
@@ -100,7 +100,7 @@ pub mod orders {
         Ok(order)
     }
 
-    pub fn delete_by_id(conn: &SqliteConnection, table_id: u16, order_id: u16) ->  Result<bool> {
+    pub fn delete_by_id(conn: &SqliteConnection, table_id: u16, order_id: u32) ->  Result<bool> {
         let mut stmt = conn.prepare("DELETE FROM orders WHERE order_id = ? and table_id = ?")?;
         match stmt.execute(&[&table_id, &order_id]) {
             Ok(cnt) => Ok(cnt == 1),

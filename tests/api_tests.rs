@@ -21,16 +21,6 @@ lazy_static! {
     .unwrap();
 }
 
-// fn get_then_assert_body<F, T: DeserializeOwned>(url: &str, status: Status, content_type: ContentType, assert_body: F) 
-// where F: FnOnce(T) -> ()
-// {
-//     let mut response = CLIENT.get(url).dispatch();
-//     assert_eq!(response.status(), status);
-//     assert_eq!(response.content_type(), Some(content_type));
-//     let body = response.body_string().unwrap();
-//     assert_body(serde_json::from_str(&body.as_str()).unwrap());
-// }
-
 fn get_then_assert<F, T: DeserializeOwned>(url: &str, status: Status, content_type: ContentType, assert_body: F) 
 where F: FnOnce(T) -> ()
 {
