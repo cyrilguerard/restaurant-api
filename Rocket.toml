@@ -1,2 +1,35 @@
 #[global.databases]
 #sqlite_db = { url = "db.sqlite", pool_size = 20 }
+
+[development]
+address = "localhost"
+port = 8000
+#workers = [number of cpus * 2]
+keep_alive = 2
+read_timeout = 2
+write_timeout = 2
+log = "normal"
+#secret_key = [randomly generated at launch]
+limits = { forms = 32768 }
+
+[staging]
+address = "0.0.0.0"
+port = 8000
+#workers = [number of cpus * 2]
+keep_alive = 2
+read_timeout = 2
+write_timeout = 2
+log = "normal"
+#secret_key = [randomly generated at launch]
+limits = { forms = 32768 }
+
+[production]
+address = "0.0.0.0"
+port = 8000
+#workers = [number of cpus * 2]
+keep_alive = 2
+read_timeout = 2
+write_timeout = 2
+log = "normal"
+#secret_key = [randomly generated at launch]
+limits = { forms = 32768 }
