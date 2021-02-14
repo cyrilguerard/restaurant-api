@@ -19,7 +19,7 @@ Or
 
 ```sh
 docker build -t restaurant-api .
-docker run -it --rm -p 8000:8000 --name restaurant-api restaurant-api
+docker run -d --rm -p 8000:8000 --name restaurant-api restaurant-api
 ```
 
 # test

@@ -19,6 +19,7 @@ WORKDIR /app/restaurant-api
 
 COPY --from=builder /usr/local/cargo/bin/restaurant-api .
 COPY --from=builder /usr/src/restaurant-api/sql ./sql
+COPY --from=builder /usr/src/restaurant-api/Rocket.toml .
 
 ENV ROCKET_DATABASES="{sqlite_db = { url = "db.sqlite", pool_size = 20 }}"
 
