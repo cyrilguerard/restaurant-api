@@ -1,9 +1,9 @@
-use std::time::Duration;
 use rand::Rng;
+use std::time::Duration;
 
 use chrono::prelude::*;
-use chrono::NaiveDateTime;
 use chrono::Duration as CDuration;
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
@@ -28,11 +28,12 @@ fn compute_ready_time(item: &MenuItem) -> Option<NaiveDateTime> {
     let max = item.max_cook_time.map(|d| d.as_secs()).unwrap_or(900);
 
     let cooking_time = rand::thread_rng().gen_range(min..max) as i64;
-    Local::now().checked_add_signed(CDuration::seconds(cooking_time)).map(|d| d.naive_local())
+    Local::now()
+        .checked_add_signed(CDuration::seconds(cooking_time))
+        .map(|d| d.naive_local())
 }
 
 impl Order {
-
     pub fn new(item: MenuItem) -> Order {
         let ready_at = compute_ready_time(&item);
         Order {
@@ -41,5 +42,4 @@ impl Order {
             ready_at: ready_at,
         }
     }
-
 }
