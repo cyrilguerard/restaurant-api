@@ -5,6 +5,8 @@ use std::fs;
 
 pub mod data;
 pub mod routes;
+pub mod services;
+pub mod utils;
 
 pub fn initialize_database(rocket: &rocket::Rocket, sql_script: &str) {
     let conn = data::connection::SqliteConnection::get_one(&rocket).unwrap();

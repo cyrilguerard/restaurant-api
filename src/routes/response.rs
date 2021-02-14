@@ -53,6 +53,16 @@ impl<T> ApiResponse<T, ApiError> {
             }),
         }
     }
+
+    pub fn server_error() -> Self {
+        ApiResponse {
+            status: Status::InternalServerError,
+            result: ApiResult::Error(ApiError {
+                reason: String::from(Status::InternalServerError.reason),
+                message: String::new(),
+            }),
+        }
+    }
 }
 
 impl<'r, T: Serialize> Responder<'r> for ApiResponse<T, ApiError> {

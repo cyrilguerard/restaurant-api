@@ -208,19 +208,19 @@ fn create_order_non_existing_menu_item_test() {
 #[test]
 fn delete_order_test() {
     get_then_assert(
-        &"/api/v1/tables/1/orders/1",
+        &"/api/v1/tables/1/orders/3",
         Status::Ok,
         ContentType::JSON,
         |order: Order| {
-            assert_eq!(order.id, Some(1));
+            assert_eq!(order.id, Some(3));
             delete_then_assert(
-                &"/api/v1/tables/1/orders/1",
+                &"/api/v1/tables/1/orders/3",
                 Status::NoContent,
                 ContentType::JSON,
                 |body: String| {
                     assert_eq!(&body, "");
                     get_then_assert(
-                        &"/api/v1/tables/1/orders/1",
+                        &"/api/v1/tables/1/orders/3",
                         Status::NotFound,
                         ContentType::JSON,
                         |error: ApiError| {
