@@ -64,41 +64,45 @@ fn call_delete_order(table_id: u16) -> () {
     }
 }
 
+fn start_clients() {
+    thread::sleep(Duration::from_millis(5000));
+    println!("Start clients");
+
+    let pool = ThreadPool::new(20);
+    loop {
+        pool.execute(move || {
+            let wait_time = rand::thread_rng().gen_range(500..3000);
+
+            let call = match wait_time % 4 {
+                0 => || {
+                    call_get_menu_items();
+                    ()
+                },
+                1 => || {
+                    call_get_table_orders(random_table_id());
+                    ()
+                },
+                2 => || {
+                    call_create_order(random_table_id(), random_item_id());
+                    ()
+                },
+                3 => || {
+                    call_delete_order(random_table_id());
+                    ()
+                },
+                _ => || {},
+            };
+            call();
+
+            thread::sleep(Duration::from_millis(wait_time));
+        });
+    }
+}
+
 fn main() {
     // start clients
     thread::spawn(move || {
-        thread::sleep(Duration::from_millis(5000));
-        println!("Start clients");
-
-        let pool = ThreadPool::new(20);
-        loop {
-            pool.execute(move || {
-                let wait_time = rand::thread_rng().gen_range(500..3000);
-
-                let call = match wait_time % 4 {
-                    0 => || {
-                        call_get_menu_items();
-                        ()
-                    },
-                    1 => || {
-                        call_get_table_orders(random_table_id());
-                        ()
-                    },
-                    2 => || {
-                        call_create_order(random_table_id(), random_item_id());
-                        ()
-                    },
-                    3 => || {
-                        call_delete_order(random_table_id());
-                        ()
-                    },
-                    _ => || {},
-                };
-                call();
-
-                thread::sleep(Duration::from_millis(wait_time));
-            });
-        }
+        start_clients();
     });
 
     ignite_rocket(|rocket| {
