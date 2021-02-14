@@ -68,33 +68,40 @@ fn start_clients() {
     thread::sleep(Duration::from_millis(5000));
     println!("Start clients");
 
-    let pool = ThreadPool::new(20);
-    loop {
+    let nb_clients = 20;
+    let pool = ThreadPool::new(nb_clients);
+    for _ in 0..nb_clients {
+        
         pool.execute(move || {
-            let wait_time = rand::thread_rng().gen_range(500..3000);
+        
+            loop {
 
-            let call = match wait_time % 4 {
-                0 => || {
-                    call_get_menu_items();
-                    ()
-                },
-                1 => || {
-                    call_get_table_orders(random_table_id());
-                    ()
-                },
-                2 => || {
-                    call_create_order(random_table_id(), random_item_id());
-                    ()
-                },
-                3 => || {
-                    call_delete_order(random_table_id());
-                    ()
-                },
-                _ => || {},
-            };
-            call();
+                let wait_time = rand::thread_rng().gen_range(500..3000);
+                thread::sleep(Duration::from_millis(wait_time));
 
-            thread::sleep(Duration::from_millis(wait_time));
+                let call = match wait_time % 4 {
+                    0 => || {
+                        call_get_menu_items();
+                        ()
+                    },
+                    1 => || {
+                        call_get_table_orders(random_table_id());
+                        ()
+                    },
+                    2 => || {
+                        call_create_order(random_table_id(), random_item_id());
+                        ()
+                    },
+                    3 => || {
+                        call_delete_order(random_table_id());
+                        ()
+                    },
+                    _ => || {},
+                };
+
+                call();
+                
+            }
         });
     }
 }
