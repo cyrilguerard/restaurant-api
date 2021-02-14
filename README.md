@@ -27,12 +27,12 @@ docker run -d --rm -p 8000:8000 --name restaurant-api restaurant-api
 ./test.sh
 ```
 
-TODO: add unit tests on service layer
+TODO: add unit tests on service layer<br/>
 
 # documentation
 
-TODO: document inside the code (module, function)
-TODO: document API using swagger
+TODO: document inside the code (module, function)<br/>
+TODO: document API using swagger<br/>
 
 Server URL: http://localhost:8000/api/v1
 
